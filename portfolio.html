@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>박시우 | Portfolio</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Noto+Sans+KR:wght@300;400;700&display=swap');
+
+    :root {
+      --bg: #050510;
+      --bg2: #0a0a1f;
+      --purple: #b44fff;
+      --cyan: #00e5ff;
+      --pink: #ff4fa3;
+      --text: #cdd6f4;
+      --muted: #6e6a96;
+      --border: rgba(180, 79, 255, 0.3);
+      --glow-p: 0 0 8px #b44fff, 0 0 24px rgba(180,79,255,0.4);
+      --glow-c: 0 0 8px #00e5ff, 0 0 24px rgba(0,229,255,0.4);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Noto Sans KR', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+    }
+
+    /* ── 캔버스 배경 ── */
+    #matrix-bg {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
+      opacity: 0.13;
+      pointer-events: none;
+    }
+
+    /* ── 스캔라인 오버레이 ── */
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.08) 2px,
+        rgba(0,0,0,0.08) 4px
+      );
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* ── 공통 레이아웃 ── */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 2;
+    }
+
+    section { padding: 80px 0; }
+
+    /* ── 네비게이션 ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(5,5,16,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    nav .inner {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      font-family: 'Share Tech Mono', monospace;
+      color: var(--cyan);
+      font-size: 1rem;
+      text-shadow: var(--glow-c);
+      letter-spacing: 2px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-family: 'Share Tech Mono', monospace;
+      letter-spacing: 1px;
+      transition: color 0.2s, text-shadow 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--cyan);
+      text-shadow: var(--glow-c);
+    }
+
+    /* ── 히어로 ── */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding-top: 56px;
+    }
+
+    .hero-inner {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .hero-tag {
+      font-family: 'Share Tech Mono', monospace;
+      color: var(--purple);
+      font-size: 0.85rem;
+      letter-spacing: 4px;
+      text-shadow: var(--glow-p);
+      animation: fadeUp 0.8s ease both;
+    }
+
+    .hero-name {
+      font-size: clamp(3rem, 8vw, 6rem);
+      font-weight: 700;
+      line-height: 1;
+      color: #fff;
+      position: relative;
+      animation: fadeUp 0.8s 0.1s ease both;
+    }
+
+    .hero-name .glitch {
+      position: relative;
+      display: inline-block;
+    }
+
+    .hero-name .glitch::before,
+    .hero-name .glitch::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+    }
+
+    .hero-name .glitch::before {
+      color: var(--cyan);
+      clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
+      transform: translate(-3px, 2px);
+      animation: glitch1 4s infinite;
+    }
+
+    .hero-name .glitch::after {
+      color: var(--pink);
+      clip-path: polygon(0 60%, 100% 60%, 100% 100%, 0 100%);
+      transform: translate(3px, -2px);
+      animation: glitch2 4s infinite;
+    }
+
+    .hero-sub {
+      font-family: 'Share Tech Mono', monospace;
+      color: var(--cyan);
+      font-size: 1rem;
+      letter-spacing: 2px;
+      animation: fadeUp 0.8s 0.2s ease both;
+    }
+
+    .hero-sub span { color: var(--muted); }
+
+    .hero-desc {
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.8;
+      max-width: 480px;
+      animation: fadeUp 0.8s 0.3s ease both;
+    }
+
+    .hero-links {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      animation: fadeUp 0.8s 0.4s ease both;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 24px;
+      border: 1px solid;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.85rem;
+      letter-spacing: 1px;
+      text-decoration: none;
+      transition: background 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+      background: transparent;
+    }
+
+    .btn-primary {
+      border-color: var(--purple);
+      color: var(--purple);
+    }
+
+    .btn-primary:hover {
+      background: rgba(180,79,255,0.12);
+      box-shadow: var(--glow-p);
+    }
+
+    .btn-secondary {
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(0,229,255,0.08);
+      box-shadow: var(--glow-c);
+    }
+
+    /* ── 섹션 헤더 ── */
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 48px;
+    }
+
+    .section-header h2 {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 1.2rem;
+      letter-spacing: 3px;
+      color: var(--cyan);
+      text-shadow: var(--glow-c);
+      font-weight: 400;
+    }
+
+    .section-header::before {
+      content: '//';
+      color: var(--purple);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 1rem;
+      text-shadow: var(--glow-p);
+    }
+
+    .section-header::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, var(--border), transparent);
+    }
+
+    /* ── 카드 ── */
+    .card {
+      background: rgba(10,10,31,0.6);
+      border: 1px solid var(--border);
+      padding: 28px;
+      transition: border-color 0.3s, box-shadow 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 3px; height: 100%;
+      background: linear-gradient(180deg, var(--purple), var(--cyan));
+    }
+
+    .card:hover {
+      border-color: rgba(180,79,255,0.6);
+      box-shadow: 0 0 20px rgba(180,79,255,0.1);
+    }
+
+    /* ── ABOUT ── */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .info-block { display: flex; flex-direction: column; gap: 16px; }
+
+    .info-row {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .info-label {
+      font-family: 'Share Tech Mono', monospace;
+      color: var(--purple);
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      min-width: 70px;
+      padding-top: 2px;
+    }
+
+    .info-value {
+      color: var(--text);
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    .info-value a {
+      color: var(--cyan);
+      text-decoration: none;
+      transition: text-shadow 0.2s;
+    }
+
+    .info-value a:hover { text-shadow: var(--glow-c); }
+
+    /* ── 스킬 ── */
+    .skill-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 16px;
+    }
+
+    .skill-item {
+      background: rgba(10,10,31,0.6);
+      border: 1px solid var(--border);
+      padding: 16px 20px;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .skill-item:hover {
+      border-color: var(--cyan);
+      box-shadow: var(--glow-c);
+    }
+
+    .skill-name {
+      font-family: 'Share Tech Mono', monospace;
+      color: var(--cyan);
+      font-size: 1rem;
+      letter-spacing: 1px;
+    }
+
+    .skill-status {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 4px;
+      font-family: 'Share Tech Mono', monospace;
+    }
+
+    .skill-bar {
+      margin-top: 10px;
+      height: 3px;
+      background: rgba(255,255,255,0.08);
+    }
+
+    .skill-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--purple), var(--cyan));
+      transition: width 1s ease;
+    }
+
+    /* ── 스펙 ── */
+    .spec-list { display: flex; flex-direction: column; gap: 16px; }
+
+    .spec-item {
+      display: grid;
+      grid-template-columns: 24px 1fr;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .spec-icon {
+      width: 24px; height: 24px;
+      border: 1px solid var(--purple);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Share Tech Mono', monospace;
+      color: var(--purple);
+      font-size: 0.75rem;
+      text-shadow: var(--glow-p);
+      flex-shrink: 0;
+    }
+
+    .spec-text {
+      font-size: 0.9rem;
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .spec-text .tag {
+      display: inline-block;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--purple);
+      border: 1px solid rgba(180,79,255,0.4);
+      padding: 2px 8px;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+
+    /* ── 프로젝트 ── */
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+    }
+
+    .project-empty {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 60px 0;
+      border: 1px dashed var(--border);
+    }
+
+    .project-empty .empty-code {
+      font-family: 'Share Tech Mono', monospace;
+      color: var(--muted);
+      font-size: 0.85rem;
+      line-height: 2;
+    }
+
+    .project-empty .blink {
+      color: var(--purple);
+      animation: blink 1.2s step-end infinite;
+    }
+
+    /* ── 푸터 ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 0;
+      position: relative;
+      z-index: 2;
+    }
+
+    footer .inner {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    footer .copy {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    footer .copy span { color: var(--purple); }
+
+    /* ── 애니메이션 ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes glitch1 {
+      0%, 90%, 100% { transform: translate(-3px, 2px); opacity: 0; }
+      92%           { transform: translate(-3px, 2px); opacity: 0.7; }
+      94%           { transform: translate(3px, -2px); opacity: 0.7; }
+      96%           { transform: translate(-3px, 2px); opacity: 0; }
+    }
+
+    @keyframes glitch2 {
+      0%, 90%, 100% { transform: translate(3px, -2px); opacity: 0; }
+      93%           { transform: translate(3px, -2px); opacity: 0.7; }
+      95%           { transform: translate(-3px, 2px); opacity: 0.7; }
+      97%           { transform: translate(3px, -2px); opacity: 0; }
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0; }
+    }
+
+    /* ── 반응형 ── */
+    @media (max-width: 640px) {
+      .about-grid { grid-template-columns: 1fr; }
+      .hero-links { flex-direction: column; }
+      nav .inner { gap: 12px; }
+      .nav-links { gap: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="matrix-bg"></canvas>
+
+<!-- 네비게이션 -->
+<nav>
+  <div class="inner">
+    <span class="nav-logo">PSW://PORTFOLIO</span>
+    <ul class="nav-links">
+      <li><a href="#about">ABOUT</a></li>
+      <li><a href="#skills">SKILLS</a></li>
+      <li><a href="#specs">SPECS</a></li>
+      <li><a href="#projects">PROJECTS</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- 히어로 -->
+<section id="hero">
+  <div class="container">
+    <div class="hero-inner">
+      <p class="hero-tag">INITIALIZED · SYSTEM ONLINE</p>
+      <h1 class="hero-name">
+        <span class="glitch" data-text="박시우">박시우</span>
+      </h1>
+      <p class="hero-sub">
+        Client &amp; Server Developer
+        <span> · 경기게임마이스터고등학교</span>
+      </p>
+      <p class="hero-desc">
+        클라이언트와 서버 개발에 관심을 가진 개발자입니다.<br/>
+        C 언어를 기반으로, C++와 C#을 학습하며 성장하고 있습니다.
+      </p>
+      <div class="hero-links">
+        <a class="btn btn-primary" href="mailto:eden2010.park@gmail.com">✉ EMAIL</a>
+        <a class="btn btn-secondary" href="https://lumen-kurimi.tistory.com/" target="_blank" rel="noopener">◈ BLOG</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="container">
+    <div class="section-header"><h2>ABOUT</h2></div>
+    <div class="card">
+      <div class="about-grid">
+        <div class="info-block">
+          <div class="info-row">
+            <span class="info-label">NAME</span>
+            <span class="info-value">박시우</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">SCHOOL</span>
+            <span class="info-value">경기게임마이스터고등학교</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">FIELD</span>
+            <span class="info-value">클라이언트 개발 / 서버 개발</span>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-row">
+            <span class="info-label">EMAIL</span>
+            <span class="info-value">
+              <a href="mailto:eden2010.park@gmail.com">eden2010.park@gmail.com</a>
+            </span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">BLOG</span>
+            <span class="info-value">
+              <a href="https://lumen-kurimi.tistory.com/" target="_blank" rel="noopener">lumen-kurimi.tistory.com</a>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="container">
+    <div class="section-header"><h2>SKILLS</h2></div>
+    <div class="skill-grid">
+      <div class="skill-item">
+        <div class="skill-name">C</div>
+        <div class="skill-status">// PROFICIENT</div>
+        <div class="skill-bar"><div class="skill-bar-fill" style="width:75%"></div></div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-name">C++</div>
+        <div class="skill-status">// LEARNING</div>
+        <div class="skill-bar"><div class="skill-bar-fill" style="width:35%"></div></div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-name">C#</div>
+        <div class="skill-status">// LEARNING</div>
+        <div class="skill-bar"><div class="skill-bar-fill" style="width:30%"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SPECS -->
+<section id="specs">
+  <div class="container">
+    <div class="section-header"><h2>SPECS</h2></div>
+    <div class="card">
+      <div class="spec-list">
+        <div class="spec-item">
+          <div class="spec-icon">★</div>
+          <div class="spec-text">
+            <span class="tag">자격증</span>COS Pro 3급
+          </div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-icon">★</div>
+          <div class="spec-text">
+            <span class="tag">수상</span>청소년 IT 경시대회 장려상
+          </div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-icon">★</div>
+          <div class="spec-text">
+            <span class="tag">수상</span>정보올림피아드 예선전 장려상
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="container">
+    <div class="section-header"><h2>PROJECTS</h2></div>
+    <div class="project-grid">
+      <div class="project-empty">
+        <div class="empty-code">
+          <span style="color:var(--purple)">$</span> loading projects...<br/>
+          <span style="color:var(--cyan)">></span> no data found<br/>
+          <span style="color:var(--muted)">// 프로젝트를 준비 중입니다</span><br/>
+          <span class="blink">▌</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 푸터 -->
+<footer>
+  <div class="inner">
+    <span class="copy">© 2026 <span>박시우</span>. All rights reserved.</span>
+    <span class="copy" style="font-size:0.7rem">PSW://SYSTEM_v1.0</span>
+  </div>
+</footer>
+
+<script>
+  // 매트릭스 레인 배경
+  const canvas = document.getElementById('matrix-bg');
+  const ctx = canvas.getContext('2d');
+
+  function resize() {
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const chars = '0123456789ABCDEF#$%@!あいうえおアイウエオ박시우클라이언트서버';
+  const fontSize = 14;
+  let columns = Math.floor(canvas.width / fontSize);
+  let drops = Array(columns).fill(1);
+
+  function drawMatrix() {
+    ctx.fillStyle = 'rgba(5,5,16,0.05)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.font = fontSize + 'px Share Tech Mono, monospace';
+
+    for (let i = 0; i < drops.length; i++) {
+      const char = chars[Math.floor(Math.random() * chars.length)];
+      const ratio = drops[i] / (canvas.height / fontSize);
+      const r = Math.floor(100 + 80 * ratio);
+      const g = Math.floor(20 + 30 * ratio);
+      const b = Math.floor(200 + 55 * ratio);
+      ctx.fillStyle = `rgb(${r},${g},${b})`;
+      ctx.fillText(char, i * fontSize, drops[i] * fontSize);
+
+      if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+        drops[i] = 0;
+      }
+      drops[i]++;
+    }
+  }
+
+  setInterval(drawMatrix, 50);
+
+  window.addEventListener('resize', () => {
+    columns = Math.floor(canvas.width / fontSize);
+    drops = Array(columns).fill(1);
+  });
+
+  // 스크롤 시 스킬 바 애니메이션
+  const bars = document.querySelectorAll('.skill-bar-fill');
+  const widths = [];
+  bars.forEach(b => {
+    widths.push(b.style.width);
+    b.style.width = '0%';
+  });
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        bars.forEach((b, i) => { b.style.width = widths[i]; });
+        observer.disconnect();
+      }
+    });
+  }, { threshold: 0.3 });
+
+  const skillSection = document.getElementById('skills');
+  if (skillSection) observer.observe(skillSection);
+</script>
+</body>
+</html>
